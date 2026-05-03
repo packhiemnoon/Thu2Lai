@@ -3,11 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>MTT</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <h1>Hello World!</h1>
+  <body data-view="login">
+    <div class="auth-card fade-in">
+      <div class="auth-header">
+        <h1 id="login-title">Welcome Back</h1>
+        <h1 id="signup-title">Create Account</h1>
+      </div>
+
+      <form id="auth-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+            minlength="4"
+            maxlength="20"
+            autocomplete="username"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+            minlength="4"
+            maxlength="20"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" id="login-btn" class="btn">Log In</button>
+        <button type="submit" id="signup-btn" class="btn">Sign Up</button>
+
+        <p id="to-signup-text">
+          Don't have an account?
+          <span class="auth-toggle" onclick="toggleView('signup')"
+            >Sign up</span
+          >
+        </p>
+        <p id="to-login-text">
+          Already have an account?
+          <span class="auth-toggle" onclick="toggleView('login')">Log in</span>
+        </p>
+      </form>
+    </div>
+
     <script src="scripts/main.js"></script>
   </body>
 </html>
