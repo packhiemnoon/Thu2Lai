@@ -9,11 +9,13 @@ import translateRoute from './routes/translateRoute.js';
 
 import mongoose from 'mongoose';
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
     res.send('hello');
 });
 
-//app.use('/users', usersRouter);
+app.use('/users', usersRoute);
 //app.use('/translate', translateRoute);
 
 try {
