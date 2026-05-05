@@ -36,3 +36,7 @@ export const loginUser = async (req, res) => {
     }
 }
 
+export const logoutUser = async (req, res) => {
+    //client side deals with invalidating token?
+    return res.json({message: 'Log Out successful.'});
+}
