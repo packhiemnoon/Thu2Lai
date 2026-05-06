@@ -3,6 +3,8 @@ const router = express.Router();
 
 import translateController from '../controller/translateController.js';
 
-//router.post('/', something)
+import { requireAuth } from '../middleware/auth.js';
+
+//router.post('/', requireAuth, something);
 
 export default router
