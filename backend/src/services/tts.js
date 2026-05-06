@@ -4,7 +4,7 @@ import 'dotenv/config';
 export const textToSpeech = async (text) => {
     const elevenlabs = new ElevenLabsClient();
     const audio = await elevenlabs.textToSpeech.convert(
-    'UgBBYS2sOqTuMpoF3BR0', // "Mark"
+    'JBFqnCBsd6RMkjVDRZzb',
     {
         text: text,
         modelId: 'eleven_v3',
@@ -12,7 +12,14 @@ export const textToSpeech = async (text) => {
         language_code: 'th',
     }
     );
-    return audio;
+    
+    const chunks = [];
+    for await (const chunk of audio) {
+        chunks.push(chunk);
+    }
+    const buffer = Buffer.concat(chunks);
+
+    return buffer.toString('base64');
 }
 
 
