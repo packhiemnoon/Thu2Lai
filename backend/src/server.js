@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', usersRoute);
-//app.use('/translate', translateRoute);
+app.use('/translate', translateRoute);
 
 try {
     await mongoose.connect(process.env.MONGO_URL);
