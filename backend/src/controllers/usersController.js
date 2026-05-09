@@ -4,14 +4,23 @@ import jwt from 'jsonwebtoken';
 
 export const registerUser = async (req, res) => {
     try {
-        if(await User.findOne({username: req.body.username}) == null)
-        {
-            const hash = await bcrypt.hash(req.body.password, 10);
-            await User.create({username: req.body.username, hashedPassword: hash});
-            return res.json({message: 'User created.'});
-        } else {
-            return res.json({message: 'User already exists.'});
+        const { username, password } = req.body;
+
+        // Validate required fields
+        if (!username || !password) {
+            return res.status(400).json({message: 'Username and password are required.'});
         }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({username});
+        if (existingUser != null) {
+            return res.status(409).json({message: 'User already exists.'});
+        }
+
+        // Create new user
+        const hash = await bcrypt.hash(password, 10);
+        await User.create({username, hashedPassword: hash});
+        return res.status(201).json({message: 'User created successfully.'});
     } catch (err) {
         return res.status(500).json({message: err.message});
     }
@@ -19,17 +28,25 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
-        const user = await User.findOne({username: req.body.username});
-        if(user != null)
-        {
-            if(await bcrypt.compare(req.body.password, user.hashedPassword)) {
-                const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, {expiresIn: '1d'});
-                return res.json({message: 'Login successful', token: token});
-            } else {
-                return res.status(401).json({message: 'Incorrect username or password.'});
-            }
+        const { username, password } = req.body;
+
+        // Validate required fields
+        if (!username || !password) {
+            return res.status(400).json({message: 'Username and password are required.'});
+        }
+
+        // Find user
+        const user = await User.findOne({username});
+        if (user == null) {
+            return res.status(401).json({message: 'Incorrect username or password.'});
+        }
+
+        // Verify password
+        if (await bcrypt.compare(password, user.hashedPassword)) {
+            const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, {expiresIn: '1d'});
+            return res.status(200).json({message: 'Login successful.', token});
         } else {
-            return res.status(401).json({message: `User doesn't exist.`});
+            return res.status(401).json({message: 'Incorrect username or password.'});
         }
     } catch (err) {
         return res.status(500).json({message: err.message});
@@ -37,6 +54,5 @@ export const loginUser = async (req, res) => {
 }
 
 export const logoutUser = async (req, res) => {
-    //client side deals with invalidating token?
-    return res.json({message: 'Log Out successful.'});
+    return res.status(200).json({message: 'Logout successful.'});
 }
