@@ -10,6 +10,13 @@ export const translateText = async (req, res) => {
 
     if (!text) return res.status(400).json({ message: "No text provided" });
 
+    // Regex for Thai characters, Thai numbers, digits, spaces, and common punctuation
+    // Ranges: \u0e00-\u0e7f (Thai)
+    const thaiRegex = /^[ก-ฮะ-์๐-๙0-9\s\.,!?\(\)\-\+]+$/;
+    if (!thaiRegex.test(text)) {
+        return res.status(400).json({ message: "Input must contain only Thai characters, numbers, and punctuation." });
+    }
+
     try {
         let finalOutput = text;
         finalOutput = await new Promise((resolve, reject) => {
