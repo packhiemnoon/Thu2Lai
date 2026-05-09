@@ -26,18 +26,21 @@ function stopCurrentAudio() {
 function updateMainButtonState() {
   const btn = document.getElementById('main-action-btn');
   const resultArea = document.getElementById('result-area');
-  if (!btn || !resultArea) return;
+  const form = document.getElementById('translate-form');
+  if (!btn || !resultArea || !form) return;
 
   const isResultVisible = resultArea.style.display === 'block';
 
   if (isResultVisible) {
     btn.textContent = 'Clear';
     btn.className = 'btn-clear';
+    btn.type = 'button'; // Prevent form submission when clearing
     btn.onclick = handleClear;
   } else {
     btn.textContent = 'Translate & Play';
     btn.className = 'btn';
-    btn.onclick = handleTranslate;
+    btn.type = 'submit';
+    btn.onclick = null; // Let the form onsubmit handle it
   }
 }
 
