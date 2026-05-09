@@ -13,7 +13,7 @@ def main():
         try:
             data = json.loads(line)
             text = data.get("text", "")
-            text.replace(" ", "")
+            text = text.replace(" ", "")
             lu_text = engine.convert_to_lu(text)
             print(json.dumps({"success": True, "result": lu_text}, ensure_ascii=False))
         except Exception as e:

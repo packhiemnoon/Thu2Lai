@@ -13,24 +13,47 @@ export const translateText = async (req, res) => {
     try {
         let finalOutput = text;
         finalOutput = await new Promise((resolve, reject) => {
-            const pythonProcess = spawn('python', [path.join(__dirname, '../bridge.py')], {
-cwd: path.join(__dirname, '..')
-});
+            const projectRoot = path.join(__dirname, '..', '..');
+            let pythonPath = process.env.PYTHON_PATH || (process.platform === 'win32' ? 'python' : 'python3');
+
+            // If pythonPath is relative, resolve it from the project root
+            if (pythonPath.startsWith('./') || pythonPath.startsWith('../')) {
+                pythonPath = path.resolve(projectRoot, pythonPath);
+            }
+
+            const scriptPath = path.join(__dirname, '../bridge.py');
+
+            const pythonProcess = spawn(pythonPath, [scriptPath], {
+                cwd: path.join(__dirname, '..')
+            });
             let result = "";
 
             pythonProcess.on('error', (err) => { console.error('spawn error:', err); });
-            pythonProcess.on('close', (code) => { console.log('exit code:', code); });
+            pythonProcess.on('close', (code) => {
+                if (code !== 0) {
+                    console.error('Python process exited with code:', code);
+                }
+            });
 
             pythonProcess.stdin.write(JSON.stringify({ text }) + "\n");
             pythonProcess.stdin.end();
 
+            let stderr = "";
+            pythonProcess.stderr.on('data', (data) => { stderr += data.toString(); });
+
             pythonProcess.stdout.on('data', (data) => { result += data.toString(); });
             pythonProcess.stdout.on('end', () => {
+                if (stderr) {
+                    console.error('Python stderr:', stderr);
+                }
                 try {
                     console.log('raw result:', result);
                     const json = JSON.parse(result);
                     json.success ? resolve(json.result) : reject(json.error);
-                } catch (e) { reject(new Error("Python parse error: " + e.message)); }
+                } catch (e) {
+                    const errorMsg = stderr ? `Python error: ${stderr}` : `Python parse error: ${e.message}. Raw output: ${result}`;
+                    reject(new Error(errorMsg));
+                }
             });
         });
         const soundRecording = await textToSpeech(finalOutput);
