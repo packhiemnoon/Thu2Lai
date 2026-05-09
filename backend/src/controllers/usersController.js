@@ -1,10 +1,10 @@
-import User from '../models/User.js';
+import User from '#models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 export const registerUser = async (req, res) => {
     try {
-        if(await User.findOne({username: req.body.username}) == null) 
+        if(await User.findOne({username: req.body.username}) == null)
         {
             const hash = await bcrypt.hash(req.body.password, 10);
             await User.create({username: req.body.username, hashedPassword: hash});
@@ -20,7 +20,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const user = await User.findOne({username: req.body.username});
-        if(user != null) 
+        if(user != null)
         {
             if(await bcrypt.compare(req.body.password, user.hashedPassword)) {
                 const token = jwt.sign({userID: user._id}, process.env.JWT_SECRET, {expiresIn: '1d'});

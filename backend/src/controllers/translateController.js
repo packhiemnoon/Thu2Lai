@@ -1,4 +1,4 @@
-import { textToSpeech } from '../services/tts.js';
+import { textToSpeech } from '#services/tts';
 import { spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
