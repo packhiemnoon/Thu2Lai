@@ -76,6 +76,25 @@ function toggleView(view) {
   }
 }
 
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  // Auto remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    toast.addEventListener('animationend', () => {
+      toast.remove();
+    });
+  }, 3000);
+}
+
 async function handleSubmit(event) {
   event.preventDefault();
   const view = document.body.getAttribute('data-view');
@@ -97,16 +116,17 @@ async function handleSubmit(event) {
       if (view === 'login') {
         localStorage.setItem('token', result.token);
         toggleView('main');
+        showToast('Logged in successfully!', 'success');
       } else {
-        alert('Registration successful! Please log in.');
+        showToast('Registration successful! Please log in.', 'success');
         toggleView('login');
       }
     } else {
-      alert(result.message || 'An error occurred');
+      showToast(result.message || 'An error occurred', 'error');
     }
   } catch (error) {
     console.error('Auth error:', error);
-    alert('Failed to connect to server');
+    showToast('Failed to connect to server', 'error');
   }
 }
 
@@ -117,6 +137,7 @@ function handleLogout() {
   localStorage.removeItem('lastText');
   localStorage.removeItem('lastSound');
   toggleView('login');
+  showToast('Logged out successfully');
 }
 
 async function handleTranslate() {
@@ -166,16 +187,16 @@ async function handleTranslate() {
       updateMainButtonState();
     } else {
       if (response.status === 401) {
-        alert('Session expired. Please log in again.');
+        showToast('Session expired. Please log in again.', 'error');
         handleLogout();
       } else {
-        alert(result.message || 'Translation failed');
+        showToast(result.message || 'Translation failed', 'error');
         updateMainButtonState();
       }
     }
   } catch (error) {
     console.error('Translate error:', error);
-    alert('Failed to connect to server');
+    showToast('Failed to connect to server', 'error');
     updateMainButtonState();
   } finally {
     btn.disabled = false;
@@ -185,7 +206,7 @@ async function handleTranslate() {
 function handleReplay() {
   const sound = localStorage.getItem('lastSound');
   if (!sound) {
-    alert('No saved sound to play');
+    showToast('No saved sound to play', 'error');
     return;
   }
 
