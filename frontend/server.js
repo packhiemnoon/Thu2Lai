@@ -1,11 +1,13 @@
 import express from "express";
+import 'dotenv/config';
+
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
 app.use(express.static("public"));
 
-const PORT = 3221;
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`Frontend Server ready at http://localhost:${PORT}`);
 });
 

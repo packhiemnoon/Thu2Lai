@@ -3,14 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MTT</title>
+    <title>Thu2Lai</title>
+    <link rel="icon" href="thai.ico" type="image/x-icon" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body data-view="login">
-    <div class="auth-card fade-in">
+    <div id="auth-view" class="auth-card fade-in">
       <div class="auth-header">
-        <h1 id="login-title">Welcome Back</h1>
+        <h1 id="login-title">Thu2Lai</h1>
+        <p id="login-desc">Thai to Lu Language Translator</p>
         <h1 id="signup-title">Create Account</h1>
+        <p id="signup-desc">Join us to start translating</p>
       </div>
 
       <form id="auth-form" onsubmit="handleSubmit(event)">
@@ -55,6 +58,41 @@
           <span class="auth-toggle" onclick="toggleView('login')">Log in</span>
         </p>
       </form>
+    </div>
+
+    <div id="main-view" class="main-card fade-in">
+      <div class="main-header">
+        <h1>Thai to Lu</h1>
+        <button onclick="handleLogout()" class="btn-logout">Logout</button>
+      </div>
+
+      <div class="main-content">
+        <div class="form-group">
+          <label for="thai-input">Thai Words</label>
+          <textarea
+            id="thai-input"
+            placeholder="Type Thai words here..."
+            rows="4"
+          ></textarea>
+        </div>
+        <button id="main-action-btn" onclick="handleTranslate()" class="btn">
+          Translate & Play
+        </button>
+
+        <div id="result-area" class="result-area" style="display: none">
+          <div class="result-header">
+            <h3>Result:</h3>
+            <button
+              id="replay-btn"
+              onclick="handleReplay()"
+              class="btn-secondary"
+            >
+              🔊 Replay
+            </button>
+          </div>
+          <p id="ipa-result"></p>
+        </div>
+      </div>
     </div>
 
     <script src="scripts/main.js"></script>
