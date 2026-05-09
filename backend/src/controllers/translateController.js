@@ -10,6 +10,10 @@ export const translateText = async (req, res) => {
 
     if (!text) return res.status(400).json({ message: "No text provided" });
 
+    if (text.length > 100) {
+        return res.status(400).json({ message: "Input text is too long (max 100 characters)." });
+    }
+
     // Regex for Thai characters, Thai numbers, digits, spaces, and common punctuation
     // Ranges: \u0e00-\u0e7f (Thai)
     const thaiRegex = /^[ก-ฮะ-์๐-๙0-9\s\.,!?\(\)\-\+]+$/;

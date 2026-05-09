@@ -67,7 +67,13 @@
       </div>
 
       <div class="main-content">
-        <form id="translate-form" onsubmit="event.preventDefault(); handleTranslate()">
+        <form
+          id="translate-form"
+          onsubmit="
+            event.preventDefault()
+            handleTranslate()
+          "
+        >
           <div class="form-group">
             <label for="thai-input">Thai Words</label>
             <textarea
@@ -75,6 +81,7 @@
               placeholder="Type Thai words here..."
               rows="4"
               required
+              maxlength="100"
             ></textarea>
           </div>
           <button type="submit" id="main-action-btn" class="btn">
