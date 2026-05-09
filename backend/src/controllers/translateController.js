@@ -14,11 +14,11 @@ export const translateText = async (req, res) => {
         return res.status(400).json({ message: "Input text is too long (max 100 characters)." });
     }
 
-    // Regex for Thai characters, Thai numbers, digits, spaces, and common punctuation
-    // Ranges: \u0e00-\u0e7f (Thai)
-    const thaiRegex = /^[ก-ฮะ-์๐-๙0-9\s\.,!?\(\)\-\+]+$/;
+    // Regex for Thai characters (consonants, vowels, tone marks) and spaces
+    // Ranges: \u0e01-\u0e3a, \u0e40-\u0e4e (Thai letters and marks)
+    const thaiRegex = /^[ก-ฮะ-์\s]+$/;
     if (!thaiRegex.test(text)) {
-        return res.status(400).json({ message: "Input must contain only Thai characters, numbers, and punctuation." });
+        return res.status(400).json({ message: "Input must contain only Thai characters and spaces." });
     }
 
     try {
