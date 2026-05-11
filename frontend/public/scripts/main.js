@@ -86,6 +86,10 @@ async function handleTranslate() {
         console.error('Audio play error:', e);
         ui.updateReplayButtonState(false);
       });
+    } else {
+      localStorage.removeItem('lastText');
+      localStorage.removeItem('lastSound');
+      stopCurrentAudio();
     }
     ui.updateMainButtonState();
   } catch (error) {
@@ -132,9 +136,6 @@ function handleClear() {
   document.getElementById('thai-input').focus();
 }
 
-// Initial check
-checkAuth();
-
 // Attach to window for HTML event handlers
 window.toggleView = ui.toggleView;
 window.handleSubmit = handleSubmit;
@@ -142,3 +143,6 @@ window.handleLogout = handleLogout;
 window.handleTranslate = handleTranslate;
 window.handleReplay = handleReplay;
 window.handleClear = handleClear;
+
+// Initial check
+checkAuth();
